@@ -277,6 +277,8 @@ function Fraction({ value }) {
 }
 
 function PersonNode({ person, ownership, status, onExpand, isCollapsed, showDetails, warnings }) {
+  const [expanded, setExpanded] = useState(false);
+  
   const colors = {
     owner: 'bg-gradient-to-br from-emerald-500 to-teal-600 text-white',
     former: 'bg-gradient-to-br from-slate-400 to-slate-500 text-white',
@@ -287,7 +289,7 @@ function PersonNode({ person, ownership, status, onExpand, isCollapsed, showDeta
   const deceased = person.death !== null;
 
   return (
-    <div className={`rounded-lg shadow-lg p-4 min-w-[200px] max-w-[250px] transition-all duration-300 hover:shadow-xl ${colors[status]} relative`}>
+    <div className={`rounded-lg shadow-lg p-3 min-w-[120px] max-w-[180px] transition-all duration-300 hover:shadow-xl ${colors[status]} relative`}>
       {warnings && warnings.length > 0 && (
         <div className="absolute -top-2 -right-2 bg-yellow-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shadow-lg group">
           ⚠
@@ -299,29 +301,50 @@ function PersonNode({ person, ownership, status, onExpand, isCollapsed, showDeta
           </div>
         </div>
       )}
+      
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <div className="font-bold text-lg">{person.name}</div>
-          <div className="text-xs opacity-80 mt-1">
-            {person.birth}–{person.death || 'present'}
-            {deceased && ' †'}
-          </div>
-          {ownership && ownership !== '0' && (
-            <div className="mt-2 pt-2 border-t border-white/30">
-              <div className="text-xs opacity-80">Ownership:</div>
-              <Fraction value={ownership} />
+          {/* Compact view - just name */}
+          <div className="font-bold text-sm">{person.name}</div>
+          
+          {/* Expanded view - show details */}
+          {expanded && (
+            <div className="mt-2 text-xs space-y-1">
+              <div className="opacity-80">
+                {person.birth}–{person.death || 'present'}
+                {deceased && ' †'}
+              </div>
+              {ownership && ownership !== '0' && (
+                <div className="pt-2 border-t border-white/30">
+                  <div className="opacity-80">Ownership:</div>
+                  <Fraction value={ownership} />
+                </div>
+              )}
             </div>
           )}
         </div>
-        {onExpand && (
-          <button
-            onClick={onExpand}
-            className="ml-2 p-1 hover:bg-white/20 rounded transition-colors"
-          >
-            {isCollapsed ? <ChevronRight size={20} /> : <ChevronDown size={20} />}
-          </button>
-        )}
+        
+        {/* Expand/collapse button for details */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="ml-1 p-1 hover:bg-white/20 rounded transition-colors"
+          title={expanded ? "Hide details" : "Show details"}
+        >
+          {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+        </button>
       </div>
+      
+      {/* Tree expand button (for children) - only show if person has children */}
+      {onExpand && (
+        <button
+          onClick={onExpand}
+          className="mt-2 w-full py-1 text-xs hover:bg-white/20 rounded transition-colors flex items-center justify-center gap-1"
+          title={isCollapsed ? "Show children" : "Hide children"}
+        >
+          {isCollapsed ? <ChevronRight size={14} /> : <ChevronDown size={14} />}
+          {isCollapsed ? 'Show' : 'Hide'} Children
+        </button>
+      )}
     </div>
   );
 }
