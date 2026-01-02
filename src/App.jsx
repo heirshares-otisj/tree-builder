@@ -483,19 +483,20 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
               status={getStatus('susan')}
             />
           </div>
+          
           {!collapsed.includes('john') && (
             <>
               {/* Progeny node centered over all children */}
               <TransferNodeVisual type="PROGENY" label="John's Children" />
               
               {/* Grid layout for children with deed node */}
-              <div className="grid grid-cols-3 gap-8 justify-items-center" style={{ gridTemplateRows: 'auto auto' }}>
+              <div className="grid grid-cols-3 gap-8 justify-items-center">
                 {/* Column 1: Alice with deed above */}
-                <div className="flex flex-col items-center" style={{ gridColumn: '1' }}>
-                  {showDeedNode && (
-                    <div className="mb-6">
-                      <TransferNodeVisual type="DEED" label="Deed from John" />
-                    </div>
+                <div className="flex flex-col items-center gap-6">
+                  {showDeedNode ? (
+                    <TransferNodeVisual type="DEED" label="Deed from John" />
+                  ) : (
+                    <div className="h-10" />
                   )}
                   <PersonNode 
                     person={PEOPLE.alice} 
@@ -504,45 +505,48 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
                   />
                 </div>
                 
-                {/* Column 2: Bob and his family */}
-                <div className="flex flex-col items-center gap-4" style={{ gridColumn: '2', gridRow: '2' }}>
-                  <PersonNode
-                    person={PEOPLE.bob}
-                    ownership={ownership.bob}
-                    status={getStatus('bob')}
-                    onExpand={TREE_STRUCTURE.bob.children.length > 0 ? () => onToggleCollapse('bob') : null}
-                    isCollapsed={collapsed.includes('bob')}
-                  />
-                  
-                  {!collapsed.includes('bob') && (
-                    <>
-                      <TransferNodeVisual type="PROGENY" label="Bob's Children" />
-                      
-                      {/* Bob's children */}
-                      <div className="flex gap-6">
-                        <PersonNode 
-                          person={PEOPLE.david} 
-                          ownership={ownership.david} 
-                          status={getStatus('david')} 
-                        />
-                        <PersonNode 
-                          person={PEOPLE.emma} 
-                          ownership={ownership.emma} 
-                          status={getStatus('emma')} 
-                        />
-                        <PersonNode 
-                          person={PEOPLE.frank} 
-                          ownership={ownership.frank} 
-                          status={getStatus('frank')}
-                          warnings={getWarningsForPerson('frank')}
-                        />
-                      </div>
-                    </>
-                  )}
+                {/* Column 2: Bob - with matching spacer */}
+                <div className="flex flex-col items-center gap-6">
+                  <div className="h-10" />
+                  <div className="flex flex-col items-center gap-4">
+                    <PersonNode
+                      person={PEOPLE.bob}
+                      ownership={ownership.bob}
+                      status={getStatus('bob')}
+                      onExpand={TREE_STRUCTURE.bob.children.length > 0 ? () => onToggleCollapse('bob') : null}
+                      isCollapsed={collapsed.includes('bob')}
+                    />
+                    
+                    {!collapsed.includes('bob') && (
+                      <>
+                        <TransferNodeVisual type="PROGENY" label="Bob's Children" />
+                        
+                        <div className="flex gap-6">
+                          <PersonNode 
+                            person={PEOPLE.david} 
+                            ownership={ownership.david} 
+                            status={getStatus('david')} 
+                          />
+                          <PersonNode 
+                            person={PEOPLE.emma} 
+                            ownership={ownership.emma} 
+                            status={getStatus('emma')} 
+                          />
+                          <PersonNode 
+                            person={PEOPLE.frank} 
+                            ownership={ownership.frank} 
+                            status={getStatus('frank')}
+                            warnings={getWarningsForPerson('frank')}
+                          />
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
                 
-                {/* Column 3: Charlie */}
-                <div style={{ gridColumn: '3', gridRow: '2' }}>
+                {/* Column 3: Charlie - with matching spacer */}
+                <div className="flex flex-col items-center gap-6">
+                  <div className="h-10" />
                   <PersonNode 
                     person={PEOPLE.charlie} 
                     ownership={ownership.charlie} 
