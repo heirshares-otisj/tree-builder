@@ -23,6 +23,7 @@ const EVENTS = [
     type: 'DEED',
     label: 'Deed to Alice',
     source: 'john',
+    preamble: "John transfers 1/4 of his ownership (the entire property) to Alice.",
     recipients: [{ id: 'alice', fraction: '1/4' }],
     warnings: [],
     deedDocument: {
@@ -482,28 +483,27 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
               status={getStatus('susan')}
             />
           </div>
-          
           {!collapsed.includes('john') && (
             <>
-              {/* Deed node on its own level if present */}
-              {showDeedNode && (
-                <TransferNodeVisual type="DEED" label="Deed from John" />
-              )}
-              
               {/* Progeny node centered over all children */}
               <TransferNodeVisual type="PROGENY" label="John's Children" />
               
-              {/* John's children level - all top-aligned */}
-              <div className="flex gap-8 items-start justify-center">
-                {/* Alice - aligns with siblings */}
-                <PersonNode 
-                  person={PEOPLE.alice} 
-                  ownership={ownership.alice} 
-                  status={getStatus('alice')} 
-                />
+              {/* Grid layout for children with deed node */}
+              <div className="grid grid-cols-3 gap-8 justify-items-center" style={{ gridTemplateRows: 'auto auto' }}>
+                {/* Column 1: Alice with deed above */}
+                <div className="flex flex-col items-center gap-6" style={{ gridColumn: '1', gridRow: '1 / span 2' }}>
+                  {showDeedNode && (
+                    <TransferNodeVisual type="DEED" label="Deed from John" />
+                  )}
+                  <PersonNode 
+                    person={PEOPLE.alice} 
+                    ownership={ownership.alice} 
+                    status={getStatus('alice')} 
+                  />
+                </div>
                 
-                {/* Bob's family */}
-                <div className="flex flex-col items-center gap-4">
+                {/* Column 2: Bob and his family */}
+                <div className="flex flex-col items-center gap-4" style={{ gridColumn: '2', gridRow: '2' }}>
                   <PersonNode
                     person={PEOPLE.bob}
                     ownership={ownership.bob}
@@ -539,12 +539,14 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
                   )}
                 </div>
                 
-                {/* Charlie */}
-                <PersonNode 
-                  person={PEOPLE.charlie} 
-                  ownership={ownership.charlie} 
-                  status={getStatus('charlie')} 
-                />
+                {/* Column 3: Charlie */}
+                <div style={{ gridColumn: '3', gridRow: '2' }}>
+                  <PersonNode 
+                    person={PEOPLE.charlie} 
+                    ownership={ownership.charlie} 
+                    status={getStatus('charlie')} 
+                  />
+                </div>
               </div>
             </>
           )}
