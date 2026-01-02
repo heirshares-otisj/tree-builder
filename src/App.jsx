@@ -302,36 +302,44 @@ function PersonNode({ person, ownership, status, onExpand, isCollapsed, showDeta
         </div>
       )}
       
-      <div className="flex items-start justify-between">
-        <div className="flex-1">
-          {/* Compact view - just name */}
-          <div className="font-bold text-sm">{person.name}</div>
-          
-          {/* Expanded view - show details */}
-          {expanded && (
-            <div className="mt-2 text-xs space-y-1">
-              <div className="opacity-80">
-                {person.birth}–{person.death || 'present'}
-                {deceased && ' †'}
-              </div>
-              {ownership && ownership !== '0' && (
-                <div className="pt-2 border-t border-white/30">
-                  <div className="opacity-80">Ownership:</div>
-                  <Fraction value={ownership} />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+      <div className="relative flex items-start gap-8">
+        {/* SVG overlay for spouse lines */}
+        {showSpouseNode && (
+          <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
+            {/* Line from John to spouse node - approximate positions */}
+            <line 
+              x1="140" y1="50" 
+              x2="200" y2="50" 
+              stroke="#ec4899" 
+              strokeWidth="2"
+            />
+            {/* Line from spouse node to Susan */}
+            <line 
+              x1="250" y1="50" 
+              x2="310" y2="50" 
+              stroke="#ec4899" 
+              strokeWidth="2"
+            />
+          </svg>
+        )}
         
-        {/* Expand/collapse button for details */}
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="ml-1 p-1 hover:bg-white/20 rounded transition-colors"
-          title={expanded ? "Hide details" : "Show details"}
-        >
-          {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-        </button>
+        <PersonNode
+          person={PEOPLE.john}
+          ownership={ownership.john}
+          status={getStatus('john')}
+          onExpand={TREE_STRUCTURE.john.children.length > 0 ? () => onToggleCollapse('john') : null}
+          isCollapsed={collapsed.includes('john')}
+        />
+        
+        {showSpouseNode && (
+          <TransferNodeVisual type="SPOUSE" label="John's Surviving Spouse" />
+        )}
+        
+        <PersonNode
+          person={PEOPLE.susan}
+          ownership={ownership.susan}
+          status={getStatus('susan')}
+        />
       </div>
       
       {/* Tree expand button (for children) - only show if person has children */}
@@ -513,6 +521,38 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
               <TransferNodeVisual type="PROGENY" label="John's Children" />
               
               {/* Grid layout for children with deed node */}
+              <div className="relative">
+                {/* SVG overlay for deed lines */}
+                {showDeedNode && (
+                  <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '300px', zIndex: 1 }}>
+                    {/* Vertical line down from John (1/4 from left edge of bottom) */}
+                    <line 
+                      x1="140" y1="100" 
+                      x2="140" y2="130" 
+                      stroke="#f97316" 
+                      strokeWidth="2"
+                    />
+                    {/* Horizontal line to deed node center */}
+                    <line 
+                      x1="140" y1="130" 
+                      x2="200" y2="130" 
+                      stroke="#f97316" 
+                      strokeWidth="2"
+                    />
+                    {/* Vertical line down to deed node */}
+                    <line 
+                      x1="200" y1="130" 
+                      x2="200" y2="160" 
+                      stroke="#f97316" 
+                      strokeWidth="2"
+                    />
+                  </svg>
+                )}
+                
+                <div className="grid grid-cols-3 gap-8 justify-items-center">
+                  {/* ... rest of grid content ... */}
+                </div>
+              </div>              
               <div className="grid grid-cols-3 gap-8 justify-items-center">
                 {/* Column 1: Alice with deed above */}
                 <div className="flex flex-col items-center gap-6">
