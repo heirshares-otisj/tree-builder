@@ -302,44 +302,36 @@ function PersonNode({ person, ownership, status, onExpand, isCollapsed, showDeta
         </div>
       )}
       
-      <div className="relative flex items-start gap-8">
-        {/* SVG overlay for spouse lines */}
-        {showSpouseNode && (
-          <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
-            {/* Line from John to spouse node - approximate positions */}
-            <line 
-              x1="140" y1="50" 
-              x2="200" y2="50" 
-              stroke="#ec4899" 
-              strokeWidth="2"
-            />
-            {/* Line from spouse node to Susan */}
-            <line 
-              x1="250" y1="50" 
-              x2="310" y2="50" 
-              stroke="#ec4899" 
-              strokeWidth="2"
-            />
-          </svg>
-        )}
+      <div className="flex items-start justify-between">
+        <div className="flex-1">
+          {/* Compact view - just name */}
+          <div className="font-bold text-sm">{person.name}</div>
+          
+          {/* Expanded view - show details */}
+          {expanded && (
+            <div className="mt-2 text-xs space-y-1">
+              <div className="opacity-80">
+                {person.birth}–{person.death || 'present'}
+                {deceased && ' †'}
+              </div>
+              {ownership && ownership !== '0' && (
+                <div className="pt-2 border-t border-white/30">
+                  <div className="opacity-80">Ownership:</div>
+                  <Fraction value={ownership} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         
-        <PersonNode
-          person={PEOPLE.john}
-          ownership={ownership.john}
-          status={getStatus('john')}
-          onExpand={TREE_STRUCTURE.john.children.length > 0 ? () => onToggleCollapse('john') : null}
-          isCollapsed={collapsed.includes('john')}
-        />
-        
-        {showSpouseNode && (
-          <TransferNodeVisual type="SPOUSE" label="John's Surviving Spouse" />
-        )}
-        
-        <PersonNode
-          person={PEOPLE.susan}
-          ownership={ownership.susan}
-          status={getStatus('susan')}
-        />
+        {/* Expand/collapse button for details */}
+        <button
+          onClick={() => setExpanded(!expanded)}
+          className="ml-1 p-1 hover:bg-white/20 rounded transition-colors"
+          title={expanded ? "Hide details" : "Show details"}
+        >
+          {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
+        </button>
       </div>
       
       {/* Tree expand button (for children) - only show if person has children */}
@@ -495,7 +487,27 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
       <div className="space-y-8">
         {/* John's level with spouse */}
         <div className="flex flex-col items-center gap-6">
-          <div className="flex items-start gap-8">
+          <div className="relative flex items-start gap-8">
+            {/* SVG overlay for spouse lines */}
+            {showSpouseNode && (
+              <svg className="absolute inset-0 pointer-events-none" style={{ width: '100%', height: '100%' }}>
+                {/* Line from John to spouse node - approximate positions */}
+                <line 
+                  x1="140" y1="50" 
+                  x2="200" y2="50" 
+                  stroke="#ec4899" 
+                  strokeWidth="2"
+                />
+                {/* Line from spouse node to Susan */}
+                <line 
+                  x1="250" y1="50" 
+                  x2="310" y2="50" 
+                  stroke="#ec4899" 
+                  strokeWidth="2"
+                />
+              </svg>
+            )}
+            
             <PersonNode
               person={PEOPLE.john}
               ownership={ownership.john}
@@ -519,7 +531,7 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
             <>
               {/* Progeny node centered over all children */}
               <TransferNodeVisual type="PROGENY" label="John's Children" />
-              
+                            
               {/* Grid layout for children with deed node */}
               <div className="relative">
                 {/* SVG overlay for deed lines */}
