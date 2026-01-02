@@ -491,9 +491,11 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
               {/* Grid layout for children with deed node */}
               <div className="grid grid-cols-3 gap-8 justify-items-center" style={{ gridTemplateRows: 'auto auto' }}>
                 {/* Column 1: Alice with deed above */}
-                <div className="flex flex-col items-center gap-6" style={{ gridColumn: '1', gridRow: '1 / span 2' }}>
+                <div className="flex flex-col items-center" style={{ gridColumn: '1' }}>
                   {showDeedNode && (
-                    <TransferNodeVisual type="DEED" label="Deed from John" />
+                    <div className="mb-6">
+                      <TransferNodeVisual type="DEED" label="Deed from John" />
+                    </div>
                   )}
                   <PersonNode 
                     person={PEOPLE.alice} 
