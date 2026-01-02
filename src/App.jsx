@@ -546,7 +546,7 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
                 
                 {/* Column 3: Charlie - with matching spacer */}
                 <div className="flex flex-col items-center gap-6">
-                  <div className="h-10" />
+                  <div className="h-16" />
                   <PersonNode 
                     person={PEOPLE.charlie} 
                     ownership={ownership.charlie} 
