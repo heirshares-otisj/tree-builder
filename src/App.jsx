@@ -655,7 +655,7 @@ function TransferEventView({ event, onBack }) {
           <div className="bg-white rounded-lg p-4 shadow">
             <div className="font-bold text-lg">{source.name}</div>
             <div className="text-sm text-gray-600 mt-2">
-              Ownership at death: <Fraction value={ownershipBefore[event.source] || '0'} />
+              {event.type === 'DEATH' ? 'Ownership at death:' : 'Ownership prior to transaction:'} <Fraction value={ownershipBefore[event.source] || '0'} />
             </div>
           </div>
         </div>
