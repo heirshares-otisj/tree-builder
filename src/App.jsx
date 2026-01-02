@@ -507,7 +507,9 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
                 
                 {/* Column 2: Bob - with matching spacer */}
                 <div className="flex flex-col items-center gap-6">
-                  <div className="h-16" />
+                  <div className="invisible">
+                    <TransferNodeVisual type="DEED" label="Deed from John" />
+                  </div>
                   <div className="flex flex-col items-center gap-4">
                     <PersonNode
                       person={PEOPLE.bob}
@@ -546,7 +548,9 @@ function TreeView({ date, collapsed, onToggleCollapse }) {
                 
                 {/* Column 3: Charlie - with matching spacer */}
                 <div className="flex flex-col items-center gap-6">
-                  <div className="h-16" />
+                  <div className="invisible">
+                    <TransferNodeVisual type="DEED" label="Deed from John" />
+                  </div>
                   <PersonNode 
                     person={PEOPLE.charlie} 
                     ownership={ownership.charlie} 
